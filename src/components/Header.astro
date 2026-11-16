@@ -1,0 +1,78 @@
+---
+import { SITE_TITLE } from '../consts';
+
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+const navItems = [
+  { href: '/', label: 'About', match: (p: string) => p === '/' },
+  { href: '/projects', label: 'Projects', match: (p: string) => p === '/projects' },
+  {
+    href: '/posts',
+    label: 'Posts',
+    match: (p: string) => p === '/posts' || p.startsWith('/posts/') || p.startsWith('/tags/'),
+  },
+];
+---
+
+<header class="site-header">
+  <nav class="container nav" aria-label="주 메뉴">
+    <a href="/" class="brand">{SITE_TITLE}</a>
+    <ul class="menu">
+      {
+        navItems.map((item) => {
+          const active = item.match(pathname);
+          return (
+            <li>
+              <a
+                href={item.href}
+                class:list={['menu-link', { active }]}
+                aria-current={active ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    min-height: 64px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+  }
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .menu-link {
+    display: inline-block;
+    padding: 12px 14px;
+    font-size: 15px;
+    text-decoration: none;
+  }
+  .menu-link.active {
+    font-weight: 700;
+    color: var(--mint);
+  }
+</style>
