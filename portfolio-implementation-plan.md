@@ -97,17 +97,17 @@ portfolio/
 
 ### 체크리스트
 
-- [ ] Astro 프로젝트 생성 (Empty, TypeScript strict)
-- [ ] Git 저장소 생성, `.gitignore` 확인, 첫 커밋
-- [ ] `global.css`에 색 변수, 기본 글꼴 크기, 링크 색 정의
-- [ ] `:focus-visible` 외곽선 스타일 추가
-- [ ] 한글 웹폰트 woff2 추가 및 `@font-face` 설정
-- [ ] `BaseLayout.astro` 작성 (title, description props)
-- [ ] `Header.astro` 작성, 현재 메뉴 민트 강조
-- [ ] `Footer.astro` 작성 (저작권, GitHub 링크)
-- [ ] 빈 페이지 3개(`/`, `/projects`, `/posts`) 생성
-- [ ] `npm run dev`로 세 페이지 이동 확인
-- [ ] 모바일 폭(375px)에서 헤더 메뉴가 줄바꿈되는지 확인
+- [x] Astro 프로젝트 생성 (Empty, TypeScript strict)
+- [x] Git 저장소 생성, `.gitignore` 확인, 첫 커밋
+- [x] `global.css`에 색 변수, 기본 글꼴 크기, 링크 색 정의
+- [x] `:focus-visible` 외곽선 스타일 추가
+- [x] 한글 웹폰트 woff2 추가 및 `@font-face` 설정
+- [x] `BaseLayout.astro` 작성 (title, description props)
+- [x] `Header.astro` 작성, 현재 메뉴 민트 강조
+- [x] `Footer.astro` 작성 (저작권, GitHub 링크)
+- [x] 빈 페이지 3개(`/`, `/projects`, `/posts`) 생성
+- [x] `npm run dev`로 세 페이지 이동 확인
+- [x] 모바일 폭(375px)에서 헤더 메뉴가 줄바꿈되는지 확인
 
 ---
 
