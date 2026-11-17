@@ -2,19 +2,19 @@
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
-import { getPublishedPosts, getAdjacentPosts } from '../../utils/posts';
+import { getPublishedPosts } from '../../utils/posts';
 
 export const getStaticPaths = (async () => {
-  const posts = await getPublishedPosts();
-  return Promise.all(
-    posts.map(async (post) => {
-      const { prev, next } = await getAdjacentPosts(post.id);
-      return {
-        params: { slug: post.id },
-        props: { post, prev, next },
-      };
-    }),
-  );
+  const posts = await getPublishedPosts(); // 최신순: [0]이 가장 최신
+  // 이미 정렬된 배열에서 바로 이웃을 고른다(글마다 컬렉션을 다시 읽지 않음).
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      prev: posts[index + 1], // 더 오래된 글 (끝을 넘으면 undefined)
+      next: index > 0 ? posts[index - 1] : undefined, // 더 최신 글
+    },
+  }));
 }) satisfies GetStaticPaths;
 
 const { post, prev, next } = Astro.props;

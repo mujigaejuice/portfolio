@@ -269,6 +269,7 @@ GitHub Pages를 쓸 경우 Astro 공식 GitHub Actions 워크플로를 사용하
 - [ ] `site` 값을 실제 주소로 수정
 - [ ] 글 하나 추가 후 push → 자동 배포 확인
 - [ ] 휴대폰으로 실제 주소 접속 확인
+- [ ] 끝 슬래시 없는 주소(`/posts`)로 접속해도 열리는지 확인 (로컬 dev/preview는 `trailingSlash: 'always'` 때문에 404가 정상)
 - [ ] 링크 공유 시 미리보기(OG) 확인 (카카오톡, 슬랙 등)
 - [ ] (선택) 커스텀 도메인 연결
 

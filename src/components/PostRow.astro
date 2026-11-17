@@ -2,6 +2,7 @@
 // src/components/PostRow.astro
 import type { CollectionEntry } from 'astro:content';
 import { formatDate, toISODate } from '../utils/format';
+import { postUrl } from '../utils/urls';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -12,7 +13,7 @@ const { title, date, tags } = post.data;
 ---
 
 <li class="row">
-  <a href={`/posts/${post.id}`} class="link">
+  <a href={postUrl(post.id)} class="link">
     <span class="title">{title}</span>
     <span class="meta">
       <time datetime={toISODate(date)}>{formatDate(date)}</time>

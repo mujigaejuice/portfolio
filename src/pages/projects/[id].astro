@@ -1,0 +1,48 @@
+---
+// 관련 글이 2개 이상인 프로젝트의 글 목록 (/projects/<id>/)
+// 관련 글이 0~1개인 프로젝트는 Projects 페이지에서 글로 바로 연결하므로 이 페이지를 만들지 않습니다.
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPublishedPosts, getPostsByProject } from '../../utils/posts';
+import { projectAnchorUrl } from '../../utils/urls';
+
+export const getStaticPaths = (async () => {
+  const [projects, posts] = await Promise.all([getCollection('projects'), getPublishedPosts()]);
+  const pages = await Promise.all(
+    projects.map(async (project) => ({
+      params: { id: project.id },
+      props: { project, posts: await getPostsByProject(project.id, posts) },
+    })),
+  );
+  return pages.filter(({ props }) => props.posts.length >= 2);
+}) satisfies GetStaticPaths;
+
+const { project, posts } = Astro.props;
+const { name } = project.data;
+---
+
+<BaseLayout title={`${name} 관련 글`} description={`${name} 프로젝트와 관련된 글 목록`}>
+  <header class="page-header">
+    <a href={projectAnchorUrl(project.id)} class="back">← Projects</a>
+    <h1>{name} 관련 글</h1>
+  </header>
+  <PostList posts={posts} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .back {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--mint);
+  }
+</style>

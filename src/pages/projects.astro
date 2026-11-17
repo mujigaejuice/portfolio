@@ -2,20 +2,24 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectItem from '../components/ProjectItem.astro';
-import { getPostsByProject } from '../utils/posts';
+import { getPublishedPosts, getPostsByProject } from '../utils/posts';
+import { postUrl, projectPostsUrl } from '../utils/urls';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const posts = await getPublishedPosts(); // 한 번만 가져와서 프로젝트마다 재사용
 
-// 관련 글 링크: 1개면 그 글로, 여러 개면 글 목록으로, 없으면 링크를 숨김
-async function relatedHrefOf(projectId: string): Promise<string | undefined> {
-  const related = await getPostsByProject(projectId);
-  if (related.length === 0) return undefined;
-  if (related.length === 1) return `/posts/${related[0].id}`;
-  return '/posts';
-}
-
+// 관련 글 링크: 1개면 그 글로, 여러 개면 그 프로젝트의 글 목록 페이지로, 없으면 링크를 숨김
 const items = await Promise.all(
-  projects.map(async (project) => ({ project, relatedHref: await relatedHrefOf(project.id) })),
+  projects.map(async (project) => {
+    const related = await getPostsByProject(project.id, posts);
+    const relatedHref =
+      related.length === 0
+        ? undefined
+        : related.length === 1
+          ? postUrl(related[0].id)
+          : projectPostsUrl(project.id);
+    return { project, relatedHref };
+  }),
 );
 ---
 

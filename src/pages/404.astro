@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { HOME_URL, POSTS_URL } from '../utils/urls';
 ---
 
 <BaseLayout
@@ -12,8 +13,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <h1>페이지를 찾을 수 없습니다</h1>
     <p class="desc">주소가 바뀌었거나 삭제된 글일 수 있습니다.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="/">About으로 가기</a>
-      <a class="btn btn-outline" href="/posts">글 목록 보기</a>
+      <a class="btn btn-primary" href={HOME_URL}>About으로 가기</a>
+      <a class="btn btn-outline" href={POSTS_URL}>글 목록 보기</a>
     </div>
   </section>
 </BaseLayout>

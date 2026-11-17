@@ -1,13 +1,18 @@
 ---
 import { SITE_TITLE } from '../consts';
+import { HOME_URL, POSTS_URL, PROJECTS_URL } from '../utils/urls';
 
 const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
 const navItems = [
-  { href: '/', label: 'About', match: (p: string) => p === '/' },
-  { href: '/projects', label: 'Projects', match: (p: string) => p === '/projects' },
+  { href: HOME_URL, label: 'About', match: (p: string) => p === '/' },
   {
-    href: '/posts',
+    href: PROJECTS_URL,
+    label: 'Projects',
+    match: (p: string) => p === '/projects' || p.startsWith('/projects/'),
+  },
+  {
+    href: POSTS_URL,
     label: 'Posts',
     match: (p: string) => p === '/posts' || p.startsWith('/posts/') || p.startsWith('/tags/'),
   },
@@ -16,7 +21,7 @@ const navItems = [
 
 <header class="site-header">
   <nav class="container nav" aria-label="주 메뉴">
-    <a href="/" class="brand">{SITE_TITLE}</a>
+    <a href={HOME_URL} class="brand">{SITE_TITLE}</a>
     <ul class="menu">
       {
         navItems.map((item) => {

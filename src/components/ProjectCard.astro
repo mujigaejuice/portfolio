@@ -1,6 +1,7 @@
 ---
 // src/components/ProjectCard.astro
 import type { CollectionEntry } from 'astro:content';
+import { projectAnchorUrl } from '../utils/urls';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -10,7 +11,7 @@ const { project } = Astro.props;
 const { name, status, summary } = project.data;
 ---
 
-<a href={`/projects#${project.id}`} class="card">
+<a href={projectAnchorUrl(project.id)} class="card">
   <span class="status">{status}</span>
   <strong class="name">{name}</strong>
   <span class="summary">{summary}</span>
