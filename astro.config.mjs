@@ -66,9 +66,14 @@ const labelTaskCheckboxes = {
 
 // https://astro.build/config
 export default defineConfig({
-  // 배포 주소. 5단계에서 실제 주소로 바꿉니다.
-  // 사이트맵·RSS·canonical·OG 이미지·robots.txt의 절대 URL이 모두 이 값으로 만들어집니다.
-  site: 'https://example.com',
+  // 배포 주소. 사이트맵·RSS·canonical·OG 이미지·robots.txt의 절대 URL이 모두 이 값으로 만들어집니다.
+  // Vercel 빌드에서는 시스템 환경 변수 VERCEL_PROJECT_PRODUCTION_URL(프로토콜 없는 도메인, 커스텀 도메인이
+  // 있으면 그중 가장 짧은 것)을 쓰고, 로컬 빌드에서는 임시값을 쓴다. 임시값이 배포 빌드에 남으면
+  // integrations/check-placeholders.mjs가 빌드를 실패시킨다.
+  // Vercel이 아닌 곳에 배포하면 아래 임시값을 실제 주소로 바꾼다.
+  site: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'https://example.com',
   // 페이지 주소는 항상 끝 슬래시(/posts/abc/). canonical·RSS·사이트맵과 같은 형태로 통일한다.
   // 내부 링크는 src/utils/urls.ts의 함수로 만든다.
   trailingSlash: 'always',

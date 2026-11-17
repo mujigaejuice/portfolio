@@ -5,6 +5,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import PostList from '../components/PostList.astro';
 import { getPublishedPosts } from '../utils/posts';
 import { EMAIL } from '../consts';
+import { publicFileExists } from '../utils/files';
 
 // featured 프로젝트를 order 순으로 최대 3개
 const featured = (await getCollection('projects', ({ data }) => data.featured))
@@ -13,6 +14,10 @@ const featured = (await getCollection('projects', ({ data }) => data.featured))
 
 // 최근 글 3개 (draft 제외, 최신순)
 const recentPosts = (await getPublishedPosts()).slice(0, 3);
+
+// 이력서 버튼은 public/resume.pdf가 있을 때만, Email 버튼은 consts.ts에 주소가 있을 때만 보인다.
+const RESUME_URL = '/resume.pdf';
+const hasResume = publicFileExists(RESUME_URL);
 ---
 
 <BaseLayout>
@@ -21,10 +26,22 @@ const recentPosts = (await getPublishedPosts()).slice(0, 3);
     <p class="intro">
       Kubernetes 기반 마이크로서비스 환경의 침입 탐지를 연구합니다. [한 줄 소개]
     </p>
-    <div class="actions">
-      <a class="btn btn-primary" href="/resume.pdf">이력서</a>
-      <a class="btn btn-outline" href={`mailto:${EMAIL}`}>Email</a>
-    </div>
+    {
+      (hasResume || EMAIL) && (
+        <div class="actions">
+          {hasResume && (
+            <a class="btn btn-primary" href={RESUME_URL}>
+              이력서
+            </a>
+          )}
+          {EMAIL && (
+            <a class="btn btn-outline" href={`mailto:${EMAIL}`}>
+              Email
+            </a>
+          )}
+        </div>
+      )
+    }
   </section>
 
   <section class="section">

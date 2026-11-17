@@ -2,6 +2,7 @@
 // src/components/ProjectItem.astro
 import type { CollectionEntry } from 'astro:content';
 import ProjectPeriod from './ProjectPeriod.astro';
+import { publicFileExists } from '../utils/files';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -10,6 +11,9 @@ interface Props {
 
 const { project, relatedHref } = Astro.props;
 const { name, status, summary, stack, startDate, endDate, github, paper } = project.data;
+
+// 논문 PDF는 frontmatter에 경로가 있고 public/에 파일도 있을 때만 링크한다(파일을 넣으면 자동으로 나타남).
+const showPaper = paper !== undefined && publicFileExists(paper);
 ---
 
 <article id={project.id} class="item">
@@ -23,7 +27,7 @@ const { name, status, summary, stack, startDate, endDate, github, paper } = proj
     <span class="stack">{stack.join(' · ')}</span>
     {github && <a href={github} rel="noopener">GitHub</a>}
     {relatedHref && <a href={relatedHref}>관련 글</a>}
-    {paper && <a href={paper} class="paper">논문 PDF</a>}
+    {showPaper && <a href={paper} class="paper">논문 PDF</a>}
   </div>
 </article>
 
