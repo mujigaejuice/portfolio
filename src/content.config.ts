@@ -59,9 +59,9 @@ const projects = defineCollection({
   schema: z
     .object({
       name: z.string(),
-      status: z.enum(['진행 중', '완료']),
+      status: z.enum(['진행 중', '완료']).optional(), // 비워 두면 상태를 표시하지 않음
       summary: z.string(),
-      stack: z.array(z.string()),
+      stack: z.array(z.string()).default([]), // 비워 두면 스택을 표시하지 않음
       startDate: projectDate, // 시작 (예: 2025-03)
       endDate: projectDate, // 끝. 진행 중이면 비워 둔다 → 화면에 '현재'로 표시
       github: z.url().optional(),

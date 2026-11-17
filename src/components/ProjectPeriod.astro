@@ -6,15 +6,20 @@ import { formatMonth, toISOMonth } from '../utils/format';
 interface Props {
   startDate?: Date;
   endDate?: Date; // 없으면 '현재'
+  separator?: boolean; // 앞에 상태가 없으면 false로 넘겨 구분점(·)을 생략
 }
 
-const { startDate, endDate } = Astro.props;
+const { startDate, endDate, separator = true } = Astro.props;
 ---
 
 {
   startDate && (
     <span class="period">
-      <span class="sep" aria-hidden="true">·</span>
+      {separator && (
+        <span class="sep" aria-hidden="true">
+          ·
+        </span>
+      )}
       <span class="visually-hidden">기간</span>
       <time datetime={toISOMonth(startDate)}>{formatMonth(startDate)}</time>
       {' – '}

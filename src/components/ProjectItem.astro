@@ -17,14 +17,18 @@ const showPaper = paper !== undefined && publicFileExists(paper);
 ---
 
 <article id={project.id} class="item">
-  <p class="meta-line">
-    <span class="status">{status}</span>
-    <ProjectPeriod startDate={startDate} endDate={endDate} />
-  </p>
+  {
+    (status || startDate) && (
+      <p class="meta-line">
+        {status && <span class="status">{status}</span>}
+        <ProjectPeriod startDate={startDate} endDate={endDate} separator={status !== undefined} />
+      </p>
+    )
+  }
   <h2 class="name">{name}</h2>
   <p class="summary">{summary}</p>
   <div class="links">
-    <span class="stack">{stack.join(' · ')}</span>
+    {stack.length > 0 && <span class="stack">{stack.join(' · ')}</span>}
     {github && <a href={github} rel="noopener">GitHub</a>}
     {relatedHref && <a href={relatedHref}>관련 글</a>}
     {showPaper && <a href={paper} class="paper">논문 PDF</a>}

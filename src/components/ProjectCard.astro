@@ -13,10 +13,14 @@ const { name, status, summary, startDate, endDate } = project.data;
 ---
 
 <a href={projectAnchorUrl(project.id)} class="card">
-  <span class="meta-line">
-    <span class="status">{status}</span>
-    <ProjectPeriod startDate={startDate} endDate={endDate} />
-  </span>
+  {
+    (status || startDate) && (
+      <span class="meta-line">
+        {status && <span class="status">{status}</span>}
+        <ProjectPeriod startDate={startDate} endDate={endDate} separator={status !== undefined} />
+      </span>
+    )
+  }
   <strong class="name">{name}</strong>
   <span class="summary">{summary}</span>
 </a>

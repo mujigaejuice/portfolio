@@ -9,7 +9,11 @@ const year = new Date().getFullYear();
     <span>© {year} {AUTHOR_NAME}</span>
     <div class="links">
       <a href="/rss.xml">RSS</a>
-      <a href={GITHUB_URL} rel="noopener">GitHub</a>
+      {GITHUB_URL && (
+        <a href={GITHUB_URL} rel="noopener">
+          GitHub
+        </a>
+      )}
     </div>
   </div>
 </footer>
