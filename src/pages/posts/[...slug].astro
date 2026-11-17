@@ -2,10 +2,13 @@
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
-import { getPublishedPosts } from '../../utils/posts';
+import { getPublishedPosts, getAllSeries } from '../../utils/posts';
+import { slugify } from '../../utils/format';
 
 export const getStaticPaths = (async () => {
   const posts = await getPublishedPosts(); // 최신순: [0]이 가장 최신
+  const allSeries = await getAllSeries(posts);
+
   // 이미 정렬된 배열에서 바로 이웃을 고른다(글마다 컬렉션을 다시 읽지 않음).
   return posts.map((post, index) => ({
     params: { slug: post.id },
@@ -13,14 +16,17 @@ export const getStaticPaths = (async () => {
       post,
       prev: posts[index + 1], // 더 오래된 글 (끝을 넘으면 undefined)
       next: index > 0 ? posts[index - 1] : undefined, // 더 최신 글
+      series: post.data.series
+        ? allSeries.find((s) => s.slug === slugify(post.data.series ?? ''))
+        : undefined,
     },
   }));
 }) satisfies GetStaticPaths;
 
-const { post, prev, next } = Astro.props;
+const { post, prev, next, series } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<PostLayout post={post} prev={prev} next={next}>
+<PostLayout post={post} prev={prev} next={next} series={series}>
   <Content />
 </PostLayout>

@@ -32,7 +32,6 @@ const ogTitle = title ?? SITE_TITLE;
 // 절대 URL 만들기: astro.config.mjs의 site가 없으면 여기서 TypeError: Invalid URL
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
-const rssURL = new URL('/rss.xml', Astro.site);
 ---
 
 <!doctype html>
@@ -78,8 +77,7 @@ const rssURL = new URL('/rss.xml', Astro.site);
     <!-- X(트위터): 나머지는 og:* 값을 사용 -->
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- 피드, 사이트맵, 아이콘 -->
-    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={rssURL.href} />
+    <!-- 사이트맵, 아이콘 -->
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />

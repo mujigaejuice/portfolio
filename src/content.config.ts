@@ -15,11 +15,19 @@ const posts = defineCollection({
       draft: z.boolean().default(false),
       // projects 컬렉션의 id (예: 'deepmesh'). 없는 id를 쓰면 빌드 로그에 에러가 납니다.
       project: reference('projects').optional(),
+      // 시리즈 이름(같은 이름끼리 묶임)과 시리즈 안에서의 순서(1, 2, 3...).
+      // seriesOrder를 생략하면 같은 시리즈 안에서 작성일 순으로 놓인다.
+      series: z.string().trim().min(1).optional(),
+      seriesOrder: z.number().int().positive().optional(),
     })
     // 수정일이 작성일보다 앞서면 frontmatter 오타이므로 빌드를 멈춘다.
     .refine((data) => !data.updated || data.updated >= data.date, {
       error: 'updated(수정일)는 date(작성일)와 같거나 이후여야 합니다.',
       path: ['updated'],
+    })
+    .refine((data) => data.seriesOrder === undefined || data.series !== undefined, {
+      error: 'seriesOrder를 쓰려면 series(시리즈 이름)도 적어야 합니다.',
+      path: ['series'],
     }),
 });
 

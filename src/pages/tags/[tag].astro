@@ -1,32 +1,33 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TagFilter from '../../components/TagFilter.astro';
+import PostFilters from '../../components/PostFilters.astro';
 import PostList from '../../components/PostList.astro';
-import { getPublishedPosts, getAllTags, getPostsByTag } from '../../utils/posts';
+import { getPublishedPosts, getAllTags, getAllSeries, getPostsByTag } from '../../utils/posts';
 
 export const getStaticPaths = (async () => {
   const posts = await getPublishedPosts(); // 한 번만 가져와서 모든 태그에 재사용
-  const allTags = await getAllTags(posts);
+  const [allTags, allSeries] = await Promise.all([getAllTags(posts), getAllSeries(posts)]);
 
   return Promise.all(
     allTags.map(async ({ tag, slug }) => ({
       params: { tag: slug }, // URL에 들어갈 값 (문자열)
       props: {
         tag, // 화면에 보일 원래 이름
-        allTags, // TagFilter에 넘길 전체 태그
+        allTags,
+        allSeries,
         posts: await getPostsByTag(slug, posts), // 이 태그가 붙은 공개 글
       },
     })),
   );
 }) satisfies GetStaticPaths;
 
-const { tag, allTags, posts } = Astro.props;
+const { tag, allTags, allSeries, posts } = Astro.props;
 const { tag: slug } = Astro.params;
 ---
 
 <BaseLayout title={`#${tag} 글`} description={`${tag} 태그가 붙은 글 목록`}>
   <h1>Posts</h1>
-  <TagFilter tags={allTags} current={slug} />
+  <PostFilters tags={allTags} series={allSeries} current={{ type: 'tag', slug }} />
   <PostList posts={posts} />
 </BaseLayout>

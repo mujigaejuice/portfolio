@@ -2,8 +2,10 @@
 // src/layouts/PostLayout.astro
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
-import { formatDate, slugifyTag, toISODate } from '../utils/format';
+import { formatDate, slugify, toISODate } from '../utils/format';
 import { POSTS_URL, postUrl, tagUrl } from '../utils/urls';
+import SeriesBox from '../components/SeriesBox.astro';
+import type { SeriesInfo } from '../utils/posts';
 import '../styles/prose.css';
 
 type Post = CollectionEntry<'posts'>;
@@ -12,14 +14,15 @@ interface Props {
   post: Post;
   prev?: Post; // 더 오래된 글
   next?: Post; // 더 최신 글
+  series?: SeriesInfo; // 글이 속한 시리즈
 }
 
-const { post, prev, next } = Astro.props;
+const { post, prev, next, series } = Astro.props;
 const { title, summary, date, updated, tags } = post.data;
 
 // 기호로만 된 태그는 slug가 빈 문자열이 되어 태그 페이지가 없으므로 링크하지 않는다.
 const tagLinks = tags
-  .map((tag) => ({ tag, slug: slugifyTag(tag) }))
+  .map((tag) => ({ tag, slug: slugify(tag) }))
   .filter(({ slug }) => slug !== '');
 ---
 
@@ -45,6 +48,8 @@ const tagLinks = tags
         ))}
       </p>
     </header>
+
+    {series && <SeriesBox series={series} currentId={post.id} />}
 
     <!-- 본문 스타일은 styles/prose.css (Markdown HTML에는 scoped 해시가 붙지 않으므로) -->
     <div class="prose">

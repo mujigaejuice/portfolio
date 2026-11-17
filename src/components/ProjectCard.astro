@@ -1,7 +1,7 @@
 ---
 // src/components/ProjectCard.astro
 import type { CollectionEntry } from 'astro:content';
-import { projectAnchorUrl } from '../utils/urls';
+import { projectUrl } from '../utils/urls';
 import ProjectPeriod from './ProjectPeriod.astro';
 
 interface Props {
@@ -12,7 +12,7 @@ const { project } = Astro.props;
 const { name, status, summary, startDate, endDate } = project.data;
 ---
 
-<a href={projectAnchorUrl(project.id)} class="card">
+<a href={projectUrl(project.id)} class="card">
   {
     (status || startDate) && (
       <span class="meta-line">

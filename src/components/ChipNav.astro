@@ -1,27 +1,24 @@
 ---
-// src/components/TagFilter.astro
-import type { TagCount } from '../utils/posts';
-import { POSTS_URL, tagUrl } from '../utils/urls';
-
-interface Props {
-  tags: TagCount[];
-  current?: string; // 현재 태그의 slug. 없으면 "전체"가 선택된 상태
+// 알약 모양 링크 목록 한 줄. Posts 페이지의 "시리즈"·"태그" 줄에 씁니다.
+// 링크라서 JS 없이 동작하고, 현재 위치는 민트 배경 + aria-current로 표시합니다.
+interface Item {
+  label: string;
+  href: string;
+  active: boolean;
 }
 
-const { tags, current } = Astro.props;
+interface Props {
+  label: string; // 줄 이름 (예: '태그')
+  items: Item[];
+}
 
-const items = [
-  { label: '전체', href: POSTS_URL, active: current === undefined },
-  ...tags.map((t) => ({
-    label: t.tag,
-    href: tagUrl(t.slug),
-    active: t.slug === current,
-  })),
-];
+const { label, items } = Astro.props;
+const labelId = `chips-${label}`;
 ---
 
-<nav aria-label="태그 필터">
-  <ul class="chips">
+<div class="row">
+  <p class="row-label" id={labelId}>{label}</p>
+  <ul class="chips" aria-labelledby={labelId}>
     {
       items.map((item) => (
         <li>
@@ -36,13 +33,26 @@ const items = [
       ))
     }
   </ul>
-</nav>
+</div>
 
 <style>
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .row-label {
+    flex: none;
+    width: 44px;
+    padding-top: 9px; /* 칩(40px) 글자와 높이 맞춤 */
+    font-size: 13px;
+    color: var(--text-muted);
+  }
   .chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    min-width: 0;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -62,7 +72,7 @@ const items = [
     border-color: var(--mint);
     color: var(--mint);
   }
-  /* 현재 태그: 민트 배경 + --bg 글자. :hover도 직접 지정해야 글자가 사라지지 않는다. */
+  /* 현재 위치: 민트 배경 + --bg 글자. :hover도 직접 지정해야 글자가 사라지지 않는다. */
   .chip.active,
   .chip.active:hover {
     border-color: var(--mint);

@@ -1,0 +1,44 @@
+---
+// Posts·태그·시리즈 페이지 위쪽의 분류 링크.
+//   시리즈  [시리즈 A] [시리즈 B]          ← 시리즈가 하나도 없으면 줄 전체를 숨김
+//   태그    [전체] [kubernetes] [ml] ...   ← '전체'는 /posts/ (모든 글)
+import ChipNav from './ChipNav.astro';
+import type { SeriesInfo, TagCount } from '../utils/posts';
+import { POSTS_URL, seriesUrl, tagUrl } from '../utils/urls';
+
+interface Props {
+  tags: TagCount[];
+  series: SeriesInfo[];
+  current?: { type: 'tag' | 'series'; slug: string }; // 없으면 '전체'(모든 글)
+}
+
+const { tags, series, current } = Astro.props;
+
+const seriesItems = series.map((s) => ({
+  label: s.name,
+  href: seriesUrl(s.slug),
+  active: current?.type === 'series' && current.slug === s.slug,
+}));
+
+const tagItems = [
+  { label: '전체', href: POSTS_URL, active: current === undefined },
+  ...tags.map((t) => ({
+    label: t.tag,
+    href: tagUrl(t.slug),
+    active: current?.type === 'tag' && current.slug === t.slug,
+  })),
+];
+---
+
+<nav class="filters" aria-label="글 분류">
+  {seriesItems.length > 0 && <ChipNav label="시리즈" items={seriesItems} />}
+  <ChipNav label="태그" items={tagItems} />
+</nav>
+
+<style>
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+</style>

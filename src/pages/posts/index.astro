@@ -1,15 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TagFilter from '../../components/TagFilter.astro';
+import PostFilters from '../../components/PostFilters.astro';
 import PostList from '../../components/PostList.astro';
-import { getPublishedPosts, getAllTags } from '../../utils/posts';
+import { getPublishedPosts, getAllTags, getAllSeries } from '../../utils/posts';
 
 const posts = await getPublishedPosts();
-const tags = await getAllTags(posts);
+const [tags, series] = await Promise.all([getAllTags(posts), getAllSeries(posts)]);
 ---
 
 <BaseLayout title="Posts" description="기술 글 목록">
   <h1>Posts</h1>
-  <TagFilter tags={tags} />
+  <PostFilters tags={tags} series={series} />
   <PostList posts={posts} />
 </BaseLayout>

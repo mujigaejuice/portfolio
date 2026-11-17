@@ -1,0 +1,44 @@
+---
+// 시리즈별 글 목록 (/series/<시리즈>/). 시리즈 순서(seriesOrder, 없으면 작성일)대로 보여 준다.
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostFilters from '../../components/PostFilters.astro';
+import PostList from '../../components/PostList.astro';
+import { getPublishedPosts, getAllTags, getAllSeries } from '../../utils/posts';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  const [allTags, allSeries] = await Promise.all([getAllTags(posts), getAllSeries(posts)]);
+
+  return allSeries.map((series) => ({
+    params: { series: series.slug },
+    props: { series, allTags, allSeries },
+  }));
+}) satisfies GetStaticPaths;
+
+const { series, allTags, allSeries } = Astro.props;
+---
+
+<BaseLayout title={`${series.name} 시리즈`} description={`${series.name} 시리즈 글 목록 (${series.posts.length}편)`}>
+  <h1>Posts</h1>
+  <PostFilters tags={allTags} series={allSeries} current={{ type: 'series', slug: series.slug }} />
+  <section class="series">
+    <h2 class="series-title">
+      {series.name} <span class="count">{series.posts.length}편</span>
+    </h2>
+    <PostList posts={series.posts} />
+  </section>
+</BaseLayout>
+
+<style>
+  .series {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .count {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+</style>

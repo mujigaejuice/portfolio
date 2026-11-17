@@ -22,7 +22,9 @@
 | `/posts` | Posts | 태그 필터 + 글 목록 |
 | `/tags/[tag]` | 태그별 글 | Posts와 같은 목록, 해당 태그만 |
 | `/posts/[slug]` | Post 상세 | 제목, 날짜·태그, 본문, 이전·다음 글 |
-| `/rss.xml` | RSS | 글 피드 |
+| `/series/[series]` | 시리즈별 글 | 시리즈 순서대로 글 목록 |
+| `/projects/[id]` | 프로젝트 상세 | 소개 본문, 스택·링크, 관련 글 |
+| ~~`/rss.xml`~~ | ~~RSS~~ | 제거함 |
 
 ### 디자인 토큰
 
@@ -236,7 +238,7 @@ export const collections = { posts, projects };
 
 ### 체크리스트
 
-- [x] RSS 피드 생성, draft 글 제외 확인
+- [x] RSS 피드 생성, draft 글 제외 확인 (이후 RSS는 제거함)
 - [x] 사이트맵 생성, `site` 설정
 - [x] 페이지별 title, description 지정
 - [x] 공통 OG 이미지 1장 제작 및 적용
@@ -291,7 +293,7 @@ GitHub Pages를 쓸 경우 Astro 공식 GitHub Actions 워크플로를 사용하
 ### 체크리스트
 
 - [ ] Pagefind 검색
-- [ ] 시리즈 필드 및 시리즈 묶음 표시
+- [x] 시리즈 필드 및 시리즈 묶음 표시
 - [ ] 글 목차
 - [ ] giscus 댓글
 - [ ] 방문 통계

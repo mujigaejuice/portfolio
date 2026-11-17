@@ -1,9 +1,9 @@
-// 태그 문자열 → URL 조각
+// 태그·시리즈 이름 → URL 조각
 // URL에서 특별한 뜻을 갖는 문자(#은 해시, ?는 쿼리, /는 경로)가 남으면 링크가 깨지므로
 // 글자·숫자 이외의 문자는 모두 하이픈으로 바꾼다. 흔한 기호는 단어로 바꿔서 정보를 보존한다.
-// 결과가 빈 문자열이면(기호로만 된 태그) 그 태그는 페이지와 링크를 만들지 않는다.
-export function slugifyTag(tag: string): string {
-  return tag
+// 결과가 빈 문자열이면(기호로만 된 이름) 페이지와 링크를 만들지 않는다.
+export function slugify(text: string): string {
+  return text
     .trim() // 앞뒤 공백 제거
     .toLowerCase() // 영문 소문자로 (한글은 변화 없음)
     .replace(/\+/g, ' plus ') // c++ → c-plus-plus

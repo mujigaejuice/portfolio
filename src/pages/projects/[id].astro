@@ -1,41 +1,101 @@
 ---
-// 관련 글이 2개 이상인 프로젝트의 글 목록 (/projects/<id>/)
-// 관련 글이 0~1개인 프로젝트는 Projects 페이지에서 글로 바로 연결하므로 이 페이지를 만들지 않습니다.
+// 프로젝트 상세 (/projects/<id>/): 상태·기간, 설명, 스택·링크, 소개 본문(프로젝트 파일의 Markdown), 관련 글
 import type { GetStaticPaths } from 'astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/PostList.astro';
+import ProjectPeriod from '../../components/ProjectPeriod.astro';
 import { getPublishedPosts, getPostsByProject } from '../../utils/posts';
-import { projectAnchorUrl } from '../../utils/urls';
+import { publicFileExists } from '../../utils/files';
+import { PROJECTS_URL } from '../../utils/urls';
+import '../../styles/prose.css';
 
 export const getStaticPaths = (async () => {
   const [projects, posts] = await Promise.all([getCollection('projects'), getPublishedPosts()]);
-  const pages = await Promise.all(
+  return Promise.all(
     projects.map(async (project) => ({
       params: { id: project.id },
-      props: { project, posts: await getPostsByProject(project.id, posts) },
+      props: { project, related: await getPostsByProject(project.id, posts) },
     })),
   );
-  return pages.filter(({ props }) => props.posts.length >= 2);
 }) satisfies GetStaticPaths;
 
-const { project, posts } = Astro.props;
-const { name } = project.data;
+const { project, related } = Astro.props;
+const { name, status, summary, stack, startDate, endDate, github, paper } = project.data;
+const { Content } = await render(project);
+const hasBody = (project.body ?? '').trim() !== '';
+const showPaper = paper !== undefined && publicFileExists(paper);
+const hasLinks = stack.length > 0 || github !== undefined || showPaper;
 ---
 
-<BaseLayout title={`${name} 관련 글`} description={`${name} 프로젝트와 관련된 글 목록`}>
-  <header class="page-header">
-    <a href={projectAnchorUrl(project.id)} class="back">← Projects</a>
-    <h1>{name} 관련 글</h1>
-  </header>
-  <PostList posts={posts} />
+<BaseLayout title={name} description={summary}>
+  <article class="project">
+    <header class="project-header">
+      <a href={PROJECTS_URL} class="back">← Projects</a>
+      {
+        (status || startDate) && (
+          <p class="meta-line">
+            {status && <span class="status">{status}</span>}
+            <ProjectPeriod startDate={startDate} endDate={endDate} separator={status !== undefined} />
+          </p>
+        )
+      }
+      <h1 class="title">{name}</h1>
+      <p class="summary">{summary}</p>
+      {
+        hasLinks && (
+          <div class="links">
+            {stack.length > 0 && <span class="stack">{stack.join(' · ')}</span>}
+            {github && (
+              <a href={github} rel="noopener">
+                GitHub
+              </a>
+            )}
+            {showPaper && (
+              <a href={paper} class="paper">
+                논문 PDF
+              </a>
+            )}
+          </div>
+        )
+      }
+    </header>
+
+    {
+      hasBody && (
+        <div class="prose">
+          <Content />
+        </div>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section class="related" id="related" aria-labelledby="related-title">
+          <h2 id="related-title">
+            관련 글 <span class="count">{related.length}</span>
+          </h2>
+          <PostList posts={related} />
+        </section>
+      )
+    }
+  </article>
 </BaseLayout>
 
 <style>
-  .page-header {
+  .project {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .project-header {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--divider);
   }
   .back {
     font-size: 13px;
@@ -44,5 +104,43 @@ const { name } = project.data;
   }
   .back:hover {
     color: var(--mint);
+  }
+  .meta-line {
+    font-size: 13px;
+  }
+  .status {
+    font-weight: 500;
+    color: var(--pink); /* 상태 = 핑크 */
+  }
+  .title {
+    font-size: 32px;
+  }
+  .summary {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text-sub);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
+  }
+  .stack {
+    color: var(--text-muted);
+  }
+  .paper {
+    color: var(--pink); /* 핑크 = 읽어야 할 정보 */
+  }
+  .related {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    scroll-margin-top: 16px;
+  }
+  .count {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-muted);
   }
 </style>
