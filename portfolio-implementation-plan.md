@@ -236,16 +236,16 @@ export const collections = { posts, projects };
 
 ### 체크리스트
 
-- [ ] RSS 피드 생성, draft 글 제외 확인
-- [ ] 사이트맵 생성, `site` 설정
-- [ ] 페이지별 title, description 지정
-- [ ] 공통 OG 이미지 1장 제작 및 적용
-- [ ] favicon 추가
-- [ ] 404 페이지 작성
-- [ ] 이력서 PDF, 논문 PDF 링크 동작 확인
-- [ ] `npm run build` 경고 없이 통과
-- [ ] `npm run preview`로 빌드 결과 최종 확인
-- [ ] Lighthouse로 성능·접근성 점수 확인 (90점 이상 목표)
+- [x] RSS 피드 생성, draft 글 제외 확인
+- [x] 사이트맵 생성, `site` 설정
+- [x] 페이지별 title, description 지정
+- [x] 공통 OG 이미지 1장 제작 및 적용
+- [x] favicon 추가
+- [x] 404 페이지 작성
+- [x] 이력서 PDF, 논문 PDF 링크 동작 확인 (현재 `public/resume.pdf`, `public/papers/deepmesh.pdf`는 임시 파일. 실제 파일로 교체 필요)
+- [x] `npm run build` 경고 없이 통과
+- [x] `npm run preview`로 빌드 결과 최종 확인
+- [x] Lighthouse로 성능·접근성 점수 확인 (90점 이상 목표) — 접근성·권장사항·SEO는 전 페이지 100점. 성능은 글 이미지가 LCP인 페이지만 81점(시뮬레이션, 실측 LCP 0.3초), 나머지 92~100점
 
 ---
 

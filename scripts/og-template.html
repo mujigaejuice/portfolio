@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  OG 이미지(public/og-default.png) 원본. 이름이나 소개 문구를 바꾼 뒤 아래 명령으로 다시 만듭니다.
+  (public/ 밖에 두었으므로 사이트에는 배포되지 않습니다. 스크린샷 경로는 반드시 절대 경로로 씁니다.)
+
+  "C:/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --hide-scrollbars \
+    --window-size=1200,630 --screenshot=<프로젝트 경로>/public/og-default.png file:///<프로젝트 경로>/scripts/og-template.html
+-->
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Pretendard';
+        font-weight: 700;
+        src: url('../public/fonts/Pretendard-Bold.subset.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Pretendard';
+        font-weight: 400;
+        src: url('../public/fonts/Pretendard-Regular.subset.woff2') format('woff2');
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      .og {
+        width: 1200px;
+        height: 630px;
+        box-sizing: border-box;
+        padding: 96px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 24px;
+        background: #0e1420;
+        color: #e8ecf2;
+        font-family: 'Pretendard', sans-serif;
+        border-bottom: 16px solid #5ee6c2; /* 민트 포인트 */
+      }
+      .name {
+        font-size: 84px;
+        font-weight: 700;
+      }
+      .desc {
+        font-size: 36px;
+        line-height: 1.5;
+        color: #c5ccd8;
+        word-break: keep-all;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="og">
+      <div class="name">[블로그 이름]</div>
+      <div class="desc">Kubernetes 기반 마이크로서비스 환경의 침입 탐지를 연구합니다.</div>
+    </div>
+  </body>
+</html>

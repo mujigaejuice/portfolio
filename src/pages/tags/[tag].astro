@@ -24,7 +24,7 @@ const { tag, allTags, posts } = Astro.props;
 const { tag: slug } = Astro.params;
 ---
 
-<BaseLayout title={`#${tag}`} description={`'${tag}' 태그가 붙은 글 목록`}>
+<BaseLayout title={`#${tag} 글`} description={`${tag} 태그가 붙은 글 목록`}>
   <h1>Posts</h1>
   <TagFilter tags={allTags} current={slug} />
   <PostList posts={posts} />

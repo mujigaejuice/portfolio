@@ -147,3 +147,9 @@
   white-space: nowrap;
   border: 0;
 }
+
+/* github-dark의 주석 색(#6A737D)은 --surface 배경 위에서 대비가 3.19:1이라 AA(4.5:1)에 못 미친다.
+   Shiki가 색을 인라인 style로 넣으므로 속성 선택자 + !important로 이 색만 밝게 바꾼다(#8B949E = 4.99:1). */
+.prose pre.astro-code span[style*="color:#6a737d" i] {
+  color: #8b949e !important;
+}

@@ -17,7 +17,13 @@ const { post, prev, next } = Astro.props;
 const { title, summary, date, updated, tags } = post.data;
 ---
 
-<BaseLayout title={title} description={summary}>
+<BaseLayout
+  title={title}
+  description={summary}
+  type="article"
+  publishedTime={date}
+  modifiedTime={updated}
+>
   <article class="post">
     <header class="post-header">
       <a href="/posts" class="back">← Posts</a>

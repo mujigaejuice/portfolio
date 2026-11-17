@@ -5,3 +5,5 @@ export const AUTHOR_NAME = '[이름]';
 export const GITHUB_URL = 'https://github.com/[아이디]';
 // 소개 페이지의 Email 버튼 주소. 실제 주소로 바꿔 주세요.
 export const EMAIL = 'hello@example.com';
+// 링크 공유 미리보기(OG) 기본 이미지. public/og-default.png (1200×630)
+export const DEFAULT_OG_IMAGE = '/og-default.png';
