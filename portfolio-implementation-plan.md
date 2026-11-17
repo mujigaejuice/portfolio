@@ -164,12 +164,12 @@ export const collections = { posts, projects };
 
 ### 체크리스트
 
-- [ ] `content.config.ts`에 posts, projects 스키마 정의
-- [ ] 프로젝트 파일 3개 작성 (deepmesh, icatch, call-desk)
-- [ ] 테스트용 글 3개 작성 (태그 겹치게, 하나는 `project: deepmesh`)
-- [ ] `draft: true` 글 1개 작성 (목록에 안 나오는지 확인용)
-- [ ] `utils/posts.ts`에 정렬·draft 제외·태그 집계·이전다음·관련 글 함수 작성
-- [ ] 필수 필드를 일부러 빼서 빌드 에러가 나는지 확인
+- [x] `content.config.ts`에 posts, projects 스키마 정의
+- [x] 프로젝트 파일 3개 작성 (deepmesh, icatch, call-desk)
+- [x] 테스트용 글 3개 작성 (태그 겹치게, 하나는 `project: deepmesh`)
+- [x] `draft: true` 글 1개 작성 (목록에 안 나오는지 확인용)
+- [x] `utils/posts.ts`에 정렬·draft 제외·태그 집계·이전다음·관련 글 함수 작성
+- [x] 필수 필드를 일부러 빼서 빌드 에러가 나는지 확인
 
 ---
 
