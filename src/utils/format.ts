@@ -29,3 +29,13 @@ export function formatDate(date: Date): string {
 export function toISODate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
+
+// 프로젝트 기간 표시용 월: "2025.03" (UTC 기준이라 빌드 서버 시간대와 무관)
+export function formatMonth(date: Date): string {
+  return `${date.getUTCFullYear()}.${String(date.getUTCMonth() + 1).padStart(2, '0')}`;
+}
+
+// <time datetime="...">용 월: "2025-03" (HTML이 허용하는 연-월 형식)
+export function toISOMonth(date: Date): string {
+  return date.toISOString().slice(0, 7);
+}

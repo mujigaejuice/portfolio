@@ -328,9 +328,13 @@ name: "DeepMesh"
 status: "진행 중"
 summary: "KD-CNN + OCSVM 기반 파드 단위 침입 탐지 사이드카"
 stack: ["Kubernetes", "KD-CNN", "OCSVM"]
+startDate: 2025-03   # 시작. 'YYYY-MM'(권장) 또는 'YYYY-MM-DD', 비워 두면 기간 표시 안 함
+endDate:             # 끝. 진행 중이면 비워 둠 → '현재'로 표시 (status가 '완료'면 필수)
 github: "https://github.com/[아이디]/deepmesh"
 paper: "/papers/deepmesh.pdf"
 order: 1
 featured: true
 ---
 ```
+
+기간은 화면에 `진행 중 · 2025.03 – 현재`처럼 월까지 표시됩니다. `2025-3`(자릿수 틀림), `2025-13`, 종료가 시작보다 앞선 값, 시작 없이 종료만 적은 값은 빌드 에러로 알려 줍니다.

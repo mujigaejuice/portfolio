@@ -1,0 +1,35 @@
+---
+// 프로젝트 기간: "· 2025.03 – 현재" / "· 2025.03 – 2026.02"
+// 상태(진행 중/완료) 뒤에 붙여 쓰도록 앞에 구분점(·)을 포함합니다. startDate가 없으면 아무것도 그리지 않습니다.
+import { formatMonth, toISOMonth } from '../utils/format';
+
+interface Props {
+  startDate?: Date;
+  endDate?: Date; // 없으면 '현재'
+}
+
+const { startDate, endDate } = Astro.props;
+---
+
+{
+  startDate && (
+    <span class="period">
+      <span class="sep" aria-hidden="true">·</span>
+      <span class="visually-hidden">기간</span>
+      <time datetime={toISOMonth(startDate)}>{formatMonth(startDate)}</time>
+      {' – '}
+      {endDate ? <time datetime={toISOMonth(endDate)}>{formatMonth(endDate)}</time> : '현재'}
+    </span>
+  )
+}
+
+<style>
+  .period {
+    color: var(--text-muted); /* 기간은 메타 정보: 상태(핑크)와 구분 */
+    font-weight: 400;
+    white-space: nowrap; /* "2025.03 – 현재"가 중간에서 끊기지 않게 */
+  }
+  .sep {
+    margin: 0 6px;
+  }
+</style>

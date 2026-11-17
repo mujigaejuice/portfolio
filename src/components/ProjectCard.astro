@@ -2,17 +2,21 @@
 // src/components/ProjectCard.astro
 import type { CollectionEntry } from 'astro:content';
 import { projectAnchorUrl } from '../utils/urls';
+import ProjectPeriod from './ProjectPeriod.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
 }
 
 const { project } = Astro.props;
-const { name, status, summary } = project.data;
+const { name, status, summary, startDate, endDate } = project.data;
 ---
 
 <a href={projectAnchorUrl(project.id)} class="card">
-  <span class="status">{status}</span>
+  <span class="meta-line">
+    <span class="status">{status}</span>
+    <ProjectPeriod startDate={startDate} endDate={endDate} />
+  </span>
   <strong class="name">{name}</strong>
   <span class="summary">{summary}</span>
 </a>
@@ -33,8 +37,10 @@ const { name, status, summary } = project.data;
   .card:hover {
     border-color: var(--mint); /* 카드 전체가 누를 수 있음을 테두리로 표시 */
   }
-  .status {
+  .meta-line {
     font-size: 12px;
+  }
+  .status {
     font-weight: 500;
     color: var(--pink); /* 상태 = 핑크 */
   }

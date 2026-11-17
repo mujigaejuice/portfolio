@@ -1,6 +1,7 @@
 ---
 // src/components/ProjectItem.astro
 import type { CollectionEntry } from 'astro:content';
+import ProjectPeriod from './ProjectPeriod.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -8,11 +9,14 @@ interface Props {
 }
 
 const { project, relatedHref } = Astro.props;
-const { name, status, summary, stack, github, paper } = project.data;
+const { name, status, summary, stack, startDate, endDate, github, paper } = project.data;
 ---
 
 <article id={project.id} class="item">
-  <span class="status">{status}</span>
+  <p class="meta-line">
+    <span class="status">{status}</span>
+    <ProjectPeriod startDate={startDate} endDate={endDate} />
+  </p>
   <h2 class="name">{name}</h2>
   <p class="summary">{summary}</p>
   <div class="links">
@@ -31,8 +35,10 @@ const { name, status, summary, stack, github, paper } = project.data;
     padding: 24px 0;
     border-bottom: 1px solid var(--divider);
   }
-  .status {
+  .meta-line {
     font-size: 12px;
+  }
+  .status {
     font-weight: 500;
     color: var(--pink);
   }

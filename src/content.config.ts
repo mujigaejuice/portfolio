@@ -23,18 +23,64 @@ const posts = defineCollection({
     }),
 });
 
+// 프로젝트 기간의 날짜 한 칸 (startDate, endDate).
+// - 'YYYY-MM'(권장, 월까지) 또는 'YYYY-MM-DD'로 적는다. 화면에는 월까지 표시한다.
+// - 비워 두면(`startDate:`) 아직 입력하지 않은 것으로 보고 화면에 기간을 표시하지 않는다.
+// - 형식을 엄격하게 검사하는 이유: '2025-3'은 한국 시간 기준으로 해석되어 UTC로 2월 28일이 되고,
+//   '2025-02-30'은 3월 2일로 넘어간다. 둘 다 에러 없이 틀린 달이 표시되는 문제를 막는다.
+//   (따옴표 없는 YYYY-MM-DD는 YAML이 먼저 Date로 바꿔서 주므로 존재하지 않는 날짜까지는 잡지 못한다.)
+const PROJECT_DATE_FORMAT = /^\d{4}-(0[1-9]|1[0-2])(-\d{2})?$/;
+const projectDate = z.preprocess(
+  (value) => {
+    if (value === null || value === '') return undefined; // 빈 칸
+    if (value instanceof Date) return value.toISOString().slice(0, 10); // YAML이 바꾼 Date → 'YYYY-MM-DD'
+    return value;
+  },
+  z
+    .string()
+    .regex(PROJECT_DATE_FORMAT, {
+      error: "날짜는 'YYYY-MM' 또는 'YYYY-MM-DD' 형식으로 적습니다. (예: 2025-03)",
+      abort: true, // 형식이 틀리면 아래 날짜 검사는 건너뛴다(메시지 중복 방지)
+    })
+    .refine(
+      (value) => {
+        const iso = value.length === 7 ? `${value}-01` : value;
+        const date = new Date(iso);
+        return !Number.isNaN(date.valueOf()) && date.toISOString().startsWith(iso);
+      },
+      { error: '존재하지 않는 날짜입니다.' },
+    )
+    .transform((value) => new Date(value.length === 7 ? `${value}-01` : value)) // UTC 자정
+    .optional(),
+);
+
 const projects = defineCollection({
   loader: glob({ pattern: '**/[^_]*.md', base: './src/content/projects' }),
-  schema: z.object({
-    name: z.string(),
-    status: z.enum(['진행 중', '완료']),
-    summary: z.string(),
-    stack: z.array(z.string()),
-    github: z.url().optional(),
-    paper: z.string().optional(), // '/papers/deepmesh.pdf'
-    order: z.number(), // 작을수록 앞
-    featured: z.boolean().default(false), // 홈에 노출
-  }),
+  schema: z
+    .object({
+      name: z.string(),
+      status: z.enum(['진행 중', '완료']),
+      summary: z.string(),
+      stack: z.array(z.string()),
+      startDate: projectDate, // 시작 (예: 2025-03)
+      endDate: projectDate, // 끝. 진행 중이면 비워 둔다 → 화면에 '현재'로 표시
+      github: z.url().optional(),
+      paper: z.string().optional(), // '/papers/deepmesh.pdf'
+      order: z.number(), // 작을수록 앞
+      featured: z.boolean().default(false), // 홈에 노출
+    })
+    .refine((data) => !data.endDate || data.startDate, {
+      error: 'endDate(종료)를 적으려면 startDate(시작)도 적어야 합니다.',
+      path: ['startDate'],
+    })
+    .refine((data) => !data.startDate || !data.endDate || data.endDate >= data.startDate, {
+      error: 'endDate(종료)는 startDate(시작)와 같거나 이후여야 합니다.',
+      path: ['endDate'],
+    })
+    .refine((data) => !(data.status === '완료' && data.startDate && !data.endDate), {
+      error: "status가 '완료'인 프로젝트는 endDate(종료)도 적습니다.",
+      path: ['endDate'],
+    }),
 });
 
 export const collections = { posts, projects };
