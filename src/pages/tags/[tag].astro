@@ -1,0 +1,31 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagFilter from '../../components/TagFilter.astro';
+import PostList from '../../components/PostList.astro';
+import { getAllTags, getPostsByTag } from '../../utils/posts';
+
+export const getStaticPaths = (async () => {
+  const allTags = await getAllTags();
+
+  return Promise.all(
+    allTags.map(async ({ tag, slug }) => ({
+      params: { tag: slug }, // URL에 들어갈 값 (문자열)
+      props: {
+        tag, // 화면에 보일 원래 이름
+        allTags, // TagFilter에 넘길 전체 태그
+        posts: await getPostsByTag(slug), // 이 태그가 붙은 공개 글
+      },
+    })),
+  );
+}) satisfies GetStaticPaths;
+
+const { tag, allTags, posts } = Astro.props;
+const { tag: slug } = Astro.params;
+---
+
+<BaseLayout title={`#${tag}`} description={`'${tag}' 태그가 붙은 글 목록`}>
+  <h1>Posts</h1>
+  <TagFilter tags={allTags} current={slug} />
+  <PostList posts={posts} />
+</BaseLayout>

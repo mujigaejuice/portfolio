@@ -1,7 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagFilter from '../../components/TagFilter.astro';
+import PostList from '../../components/PostList.astro';
+import { getPublishedPosts, getAllTags } from '../../utils/posts';
+
+const posts = await getPublishedPosts();
+const tags = await getAllTags();
 ---
 
 <BaseLayout title="Posts" description="기술 글 목록">
   <h1>Posts</h1>
+  <TagFilter tags={tags} />
+  <PostList posts={posts} />
 </BaseLayout>

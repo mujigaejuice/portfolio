@@ -1,0 +1,48 @@
+---
+// src/components/ProjectCard.astro
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { name, status, summary } = project.data;
+---
+
+<a href={`/projects#${project.id}`} class="card">
+  <span class="status">{status}</span>
+  <strong class="name">{name}</strong>
+  <span class="summary">{summary}</span>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%; /* 같은 행의 카드 높이 맞추기 */
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text); /* scoped 규칙(0,2,0)이 a:hover를 이겨서 hover해도 글자색은 그대로 */
+    text-decoration: none;
+    transition: border-color 0.15s;
+  }
+  .card:hover {
+    border-color: var(--mint); /* 카드 전체가 누를 수 있음을 테두리로 표시 */
+  }
+  .status {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pink); /* 상태 = 핑크 */
+  }
+  .name {
+    font-size: 17px;
+  }
+  .summary {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+</style>

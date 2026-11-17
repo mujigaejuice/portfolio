@@ -1,0 +1,72 @@
+---
+// src/components/TagFilter.astro
+import type { TagCount } from '../utils/posts';
+
+interface Props {
+  tags: TagCount[];
+  current?: string; // 현재 태그의 slug. 없으면 "전체"가 선택된 상태
+}
+
+const { tags, current } = Astro.props;
+
+const items = [
+  { label: '전체', href: '/posts', active: current === undefined },
+  ...tags.map((t) => ({
+    label: t.tag,
+    href: `/tags/${t.slug}`,
+    active: t.slug === current,
+  })),
+];
+---
+
+<nav aria-label="태그 필터">
+  <ul class="chips">
+    {
+      items.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={['chip', { active: item.active }]}
+            aria-current={item.active ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .chip {
+    display: inline-flex; /* a는 기본 inline이라 높이가 안 먹으므로 */
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .chip:hover {
+    border-color: var(--mint);
+    color: var(--mint);
+  }
+  /* 현재 태그: 민트 배경 + --bg 글자. :hover도 직접 지정해야 글자가 사라지지 않는다. */
+  .chip.active,
+  .chip.active:hover {
+    border-color: var(--mint);
+    background: var(--mint);
+    color: var(--bg);
+    font-weight: 500;
+  }
+</style>

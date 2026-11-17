@@ -1,0 +1,44 @@
+---
+// src/components/PostRow.astro
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, toISODate } from '../utils/format';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, date, tags } = post.data;
+---
+
+<li class="row">
+  <a href={`/posts/${post.id}`} class="link">
+    <span class="title">{title}</span>
+    <span class="meta">
+      <time datetime={toISODate(date)}>{formatDate(date)}</time>
+      {tags.length > 0 && <> · {tags.join(', ')}</>}
+    </span>
+  </a>
+</li>
+
+<style>
+  .row {
+    border-bottom: 1px solid var(--divider);
+  }
+  .link {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 0;
+    text-decoration: none;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .meta {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+</style>

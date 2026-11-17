@@ -28,6 +28,7 @@
   --text-sub: #C5CCD8;  /* 설명 텍스트 */
   --text-muted: #9AA4B5;/* 날짜, 메타 정보 */
   --border: #2A3448;    /* 카드 테두리 */
+  --border-strong: #3A465E; /* 테두리 버튼, 태그 칩 (눌러볼 수 있는 요소의 테두리) */
   --divider: #222B3D;   /* 목록 구분선 */
   --surface: #1C2536;   /* 이미지 자리, 코드 블록 배경 */
   --mint: #5EE6C2;      /* 주요 동작: 현재 메뉴, 주 버튼, 선택된 태그, 링크 hover */
@@ -151,4 +152,39 @@ a:hover {
 .skip-link:focus {
   top: 12px;
   color: var(--bg);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; /* 글자를 세로 가운데로, 클릭 영역 확보 */
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; /* 터치 대상 최소 크기 */
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid transparent; /* 두 버튼의 높이를 맞추기 위한 투명 테두리 */
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* 주 버튼: 민트 배경 + --bg 글자.
+   a:hover(명시도 0,1,1)보다 낮으면 hover 때 민트 글자가 되어 사라지므로 :hover도 직접 지정한다. */
+.btn-primary,
+.btn-primary:hover {
+  background: var(--mint);
+  color: var(--bg);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+/* 테두리 버튼 */
+.btn-outline {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.btn-outline:hover {
+  border-color: var(--mint);
+  color: var(--mint);
 }

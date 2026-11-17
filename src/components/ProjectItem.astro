@@ -1,0 +1,59 @@
+---
+// src/components/ProjectItem.astro
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  relatedHref?: string; // 관련 글 링크. 없으면 링크를 숨깁니다.
+}
+
+const { project, relatedHref } = Astro.props;
+const { name, status, summary, stack, github, paper } = project.data;
+---
+
+<article id={project.id} class="item">
+  <span class="status">{status}</span>
+  <h2 class="name">{name}</h2>
+  <p class="summary">{summary}</p>
+  <div class="links">
+    <span class="stack">{stack.join(' · ')}</span>
+    {github && <a href={github} rel="noopener">GitHub</a>}
+    {relatedHref && <a href={relatedHref}>관련 글</a>}
+    {paper && <a href={paper} class="paper">논문 PDF</a>}
+  </div>
+</article>
+
+<style>
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .status {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--pink);
+  }
+  .name {
+    font-size: 20px;
+  }
+  .summary {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-sub);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
+  }
+  .stack {
+    color: var(--text-muted);
+  }
+  .paper {
+    color: var(--pink); /* 핑크 = 읽어야 할 정보 */
+  }
+</style>

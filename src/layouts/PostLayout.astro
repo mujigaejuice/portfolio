@@ -1,0 +1,104 @@
+---
+// src/layouts/PostLayout.astro
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { formatDate, slugifyTag, toISODate } from '../utils/format';
+import '../styles/prose.css';
+
+type Post = CollectionEntry<'posts'>;
+
+interface Props {
+  post: Post;
+  prev?: Post; // 더 오래된 글
+  next?: Post; // 더 최신 글
+}
+
+const { post, prev, next } = Astro.props;
+const { title, summary, date, updated, tags } = post.data;
+---
+
+<BaseLayout title={title} description={summary}>
+  <article class="post">
+    <header class="post-header">
+      <a href="/posts" class="back">← Posts</a>
+      <h1 class="title">{title}</h1>
+      <p class="meta">
+        <time datetime={toISODate(date)}>{formatDate(date)}</time>
+        {updated && <> (수정 {formatDate(updated)})</>}
+        {tags.map((tag) => (
+          <>
+            {' · '}
+            <a href={`/tags/${slugifyTag(tag)}`}>#{tag}</a>
+          </>
+        ))}
+      </p>
+    </header>
+
+    <!-- 본문 스타일은 styles/prose.css (Markdown HTML에는 scoped 해시가 붙지 않으므로) -->
+    <div class="prose">
+      <slot />
+    </div>
+
+    {
+      (prev || next) && (
+        <nav class="pager" aria-label="이전 다음 글">
+          {prev ? <a href={`/posts/${prev.id}`}>← {prev.data.title}</a> : <span />}
+          {next ? <a href={`/posts/${next.id}`}>{next.data.title} →</a> : <span />}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .post-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .back {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .back:hover {
+    color: var(--mint);
+  }
+  .title {
+    font-size: 32px;
+  }
+  .meta {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .meta a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .meta a:hover {
+    color: var(--mint);
+  }
+
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid var(--divider);
+    font-size: 15px;
+  }
+  .pager a {
+    padding: 10px 0;
+    text-decoration: none;
+  }
+</style>
