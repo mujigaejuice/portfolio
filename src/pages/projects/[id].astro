@@ -23,7 +23,8 @@ export const getStaticPaths = (async () => {
 const { project, related } = Astro.props;
 const { name, status, summary, stack, startDate, endDate, github, paper } = project.data;
 const { Content } = await render(project);
-const hasBody = (project.body ?? '').trim() !== '';
+// HTML 주석(작성 뼈대)만 있으면 아직 본문이 없는 것으로 본다 → '준비 중' 안내
+const hasBody = (project.body ?? '').replace(/<!--[\s\S]*?-->/g, '').trim() !== '';
 const showPaper = paper !== undefined && publicFileExists(paper);
 const hasLinks = stack.length > 0 || github !== undefined || showPaper;
 ---
@@ -62,10 +63,12 @@ const hasLinks = stack.length > 0 || github !== undefined || showPaper;
     </header>
 
     {
-      hasBody && (
+      hasBody ? (
         <div class="prose">
           <Content />
         </div>
+      ) : (
+        <p class="pending">프로젝트 소개 글을 준비하고 있습니다.</p>
       )
     }
 
@@ -131,6 +134,13 @@ const hasLinks = stack.length > 0 || github !== undefined || showPaper;
   }
   .paper {
     color: var(--pink); /* 핑크 = 읽어야 할 정보 */
+  }
+  .pending {
+    padding: 20px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    color: var(--text-muted);
   }
   .related {
     display: flex;
